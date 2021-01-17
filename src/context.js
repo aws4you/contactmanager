@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import {api} from "./components/Settings";
+import axios from "axios";
 
 const Context = React.createContext();
 
@@ -21,27 +23,15 @@ const reducer = (state, action) => {
 
 export class Provider extends Component {
     state = {
-        contacts: [
-            {
-                id: 1,
-                name: "John Doe",
-                email: "jdoe@gmail.com",
-                phone: "555-555-5555"
-            },
-            {
-                id: 2,
-                name: "Karen",
-                email: "karen@gmail.com",
-                phone: "555-555-11111"
-            },
-            {
-                id: 3,
-                name: "Henry",
-                email: "henry@gmail.com",
-                phone: "555-555-2222"
-            }
-        ],
+        contacts: [],
         dispatch: action => this.setState(state => reducer(state, action))
+    }
+
+    componentDidMount() {
+        axios(api("/contactmanager/contacts/"))
+            .then(res => this.setState({
+                contacts: res.data
+            }))
     }
 
     render() {

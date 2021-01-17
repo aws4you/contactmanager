@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types'
 import {Consumer} from "../../context";
+import axios from "axios";
+import {api} from "../Settings";
+import {Link} from "react-router-dom";
 
 class Contact extends Component {
 
@@ -22,6 +25,10 @@ class Contact extends Component {
                                onClick={this.onShowClick}/>
                             <i className="fas fa-times" style={{cursor: 'pointer', float: 'right', color: 'red'}}
                                onClick={() => this.onDeleteClick(value, contact)}/>
+                            <Link to={`contact/edit/${contact.id}`} >
+                                <i className="fas fa-user-edit"
+                                   style={{cursor: 'pointer', float: 'right', color: 'black', marginRight: '1rem'}} />
+                            </Link>
                         </h4>
                         {
                             showContactInfo ? (
@@ -44,7 +51,8 @@ class Contact extends Component {
     }
 
     onDeleteClick = (value, contact) => {
-        value.dispatch({type: 'CONTACT_DELETE', payload: contact.id});
+        axios.delete(api(`/contactmanager/contacts/${contact.id}/`))
+            .then(res => value.dispatch({type: 'CONTACT_DELETE', payload: contact.id}));
     }
 }
 

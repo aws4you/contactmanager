@@ -4,7 +4,7 @@ import TextInputGroup from "./TextInputGroup";
 import axios from "axios";
 import {api} from "../Settings";
 
-class AddContact extends Component {
+class EditContact extends Component {
     state = {
         name: '', email: '', phone: '', errors: {}
     }
@@ -35,16 +35,22 @@ class AddContact extends Component {
             phone: this.state.phone
         }
 
-        axios.post(api("/contactmanager/contacts/"), contact)
-            .then(res => {
-                dispatch({type: 'CONTACT_ADD', payload: res.data})
-                this.setState({name: '', email: '', phone: '', errors: {}});
-                this.props.history.push("/");
-            })
-            .catch(err => {
-                this.setState({ errors: { ...err.response.data }})
-            })
-        ;
+        // axios.put(api(`/contactmanager/contacts/`), contact)
+        //     .then(res => {
+        //         dispatch({type: 'CONTACT_ADD', payload: res.data})
+        //         this.setState({name: '', email: '', phone: '', errors: {}});
+        //         this.props.history.push("/");
+        //     })
+        //     .catch(err => {
+        //         this.setState({ errors: { ...err.response.data }})
+        //     })
+        // ;
+    }
+
+    async componentDidMount() {
+        const { id } = this.props.match.params;
+        const res = await axios.get(api(`/contactmanager/contacts/${id}/`));
+        this.setState({name: res.data.name, email: res.data.email, phone: res.data.phone});
     }
 
     render() {
@@ -53,7 +59,7 @@ class AddContact extends Component {
             <Consumer>{value => {
                 return (
                     <div className={'card mb-3'}>
-                        <div className="card-header">Add contact</div>
+                        <div className="card-header">Update contact</div>
                         <div className="card-body">
                             <form onSubmit={(e) => this.onSubmit(e, value.dispatch)}>
                                 <TextInputGroup label={"Name"} onChange={this.onChange} value={name}
@@ -62,7 +68,7 @@ class AddContact extends Component {
                                                 placeholder={"Enter email..."} name={"email"} error={errors.email}/>
                                 <TextInputGroup label={"Phone"} onChange={this.onChange} value={phone}
                                                 placeholder={"Enter phone..."} name={"phone"} error={errors.phone}/>
-                                <input type="submit" value={"Add contact"} className={'btn btn-light btn-block'}/>
+                                <input type="submit" value={"Update contact"} className={'btn btn-light btn-block'}/>
                             </form>
                         </div>
                     </div>
@@ -74,4 +80,4 @@ class AddContact extends Component {
     }
 }
 
-export default AddContact;
+export default EditContact;

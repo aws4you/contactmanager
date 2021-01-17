@@ -9,6 +9,9 @@ class Contacts extends Component {
             <Consumer>{value => {
                 return (
                     <React.Fragment>
+                        <h1 className="display-4 mb-2">
+                            <span className="text-danger">Contact</span> List
+                        </h1>
                         {value.contacts.map(c => (
                             <Contact key={c.id} contact={c} />
                         ))}
